@@ -19,8 +19,8 @@ flatpickr(date, {
   time_24hr: true,
   defaultDate: new Date(),
   minuteIncrement: 1,
-  onClose(selectedDates) {
-    if (selectedDates[0] <= Date.now()) {
+  onClose([selectedDate]) {
+    if (selectedDate <= Date.now()) {
       Notiflix.Notify.failure('Please choose a date in the future');
       btn.disabled = true;
     } else {
@@ -42,16 +42,19 @@ function onBtnStartClick() {
     const timeToFinish = choosenDate - Date.now();
     const { days, hours, minutes, seconds } = convertMs(timeToFinish);
 
-    day.textContent = addLeadingZero(days);
-    hour.textContent = addLeadingZero(hours);
-    min.textContent = addLeadingZero(minutes);
-    sec.textContent = addLeadingZero(seconds);
+    function updateInterfaceTimer({ days, hours, minutes, seconds }) {
+      day.textContent = addLeadingZero(days);
+      hour.textContent = addLeadingZero(hours);
+      min.textContent = addLeadingZero(minutes);
+      sec.textContent = addLeadingZero(seconds);
+    }
 
     if (timeToFinish < 1000) {
       spans.forEach(item => item.classList.toggle('end'));
       clearInterval(timerId);
       date.disabled = false;
     }
+    updateInterfaceTimer({ days, hours, minutes, seconds });
   }, 1000);
 }
 
